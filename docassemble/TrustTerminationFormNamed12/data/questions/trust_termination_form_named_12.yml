@@ -1,0 +1,701 @@
+---
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+  - docassemble.ALMassachusetts:al_massachusetts.yml
+  - docassemble.MassAccess:massaccess.yml
+---
+metadata:
+  title: |
+    Trust Termination
+  short title: |
+    Trust Termination
+  tags:
+    - ES-00-00-00-00
+  authors:
+    - Robert Little
+---
+mandatory: True
+comment: |
+  Global interview metadata
+variable name: interview_metadata["trust_termination_form_named_12"]
+data:
+  al_weaver_version: "1.8.0"
+  generated on: "2022-12-06"
+  title: >-
+    Trust Termination
+  short title: >-
+    Trust Termination
+  description: |-
+    This form will start the courts look into the current trust
+  allowed courts: 
+    - "Probate and Family Court"
+  categories:
+    - "ES-00-00-00-00"
+  typical role: "plaintiff"
+  generate download screen: True
+---
+code: |
+  interview_metadata['main_interview_key'] =  'trust_termination_form_named_12'
+---
+code: |
+  # This controls the default country and list of states in address field questions
+  AL_DEFAULT_COUNTRY = "US"
+---
+code: |
+  # This controls the default state in address field questions
+  AL_DEFAULT_STATE = "MA"
+---
+code: |
+  github_repo_name =  'docassemble-TrustTerminationFormNamed12'
+---
+code: |
+  interview_short_title = "Trust Termination"
+---
+code: |
+  al_form_type = "other" 
+---
+objects:
+  - users: ALPeopleList.using(there_are_any=True)
+---
+sections:
+  - review_trust_termination_form_named_12: Review your answers
+---
+#################### Interview order #####################
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_trust_termination_form_named_12
+code: |
+  # Set the allowed courts for this interview
+  allowed_courts = interview_metadata["trust_termination_form_named_12"]["allowed courts"]
+  nav.set_section("review_trust_termination_form_named_12")
+  user_role = "plaintiff"
+  user_ask_role = "plaintiff"
+  case_name
+  docket_number
+  trial_court.division
+  is_petitioners_yesno
+  trust_date
+  trustees_name_first
+  users1_interest
+  set_progress(12)
+  petitioners_further_statement
+  petitioners_signature_date
+  set_progress(24)
+  petitioners.gather()
+  petitioners[0].address.address
+  set_progress(36)
+  petitioners[0].phone_number
+  users.gather()
+  set_parts(subtitle=str(users))
+  set_progress(48)
+  users[0].address.address
+  users[1].address.address
+  users[2].address.address
+  set_progress(60)
+  attorneys_full_name
+  attorneys[0].address.address
+  attorneys[0].phone_number
+  attorneys[0].email
+  interview_order_trust_termination_form_named_12 = True
+---
+###################### Main order ######################
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+mandatory: True
+code: |
+  al_intro_screen
+  trust_termination_form_named_12_intro
+  interview_order_trust_termination_form_named_12
+  signature_date
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  trust_termination_form_named_12_download
+---
+comment: |
+  This question is used to introduce your interview. Please customize
+id: Trust_Termination
+continue button field: trust_termination_form_named_12_intro
+question: |
+  Trust Termination
+subquestion: |
+  You should know who the trustee is as well as any interested party
+---
+id: Court Details
+question: |
+  Court Details
+fields:
+  - "Case name": case_name
+    maxlength: 56
+  - "Trail court": trail_court
+    maxlength: 91
+---
+id: Petitioner Information
+question: |
+  Petitioner Information
+fields:
+  - "Is Petitioner filing this form": is_petitioners_yesno
+    datatype: yesno
+  - "Is the Petitioner not filing this form": is_petitioners_different_yesno
+    datatype: yesno
+  - "Petitioners interest": petitioners_interest
+    maxlength: 37
+---
+id: Trust Informoation
+question: |
+  Trust Informoation
+fields:
+  - "Date of trust": trust_date
+    datatype: date
+  - "Trust identity": trust_identity
+    maxlength: 91
+  - "Date of amendments": amendments_date
+    datatype: date
+  - "Is the trust a non-charitable irrevocable trust?": is_five_yesno
+    datatype: yesno
+  - "Do Settlor and all the Beneficiaries agree to the termination?": is_five_one_yesno
+    datatype: yesno
+  - "Are you sure that all Beneficiaries agree to the termination?": is_five_two_yesno
+    datatype: yesno
+  - "Are there any Benificiaries that do not approve of the termination?": is_five_three_yesno
+    datatype: yesno
+  - "Does this trust need to be terminated due to unanticipated events?": is_six_yesno
+    datatype: yesno
+  - "Is the trust charitable?": is_six_charitable_yesno
+    datatype: yesno
+  - "Is the trust non-charitable?": is_six_noncharitable_yesno
+    datatype: yesno
+  - "Please explain the unanticipated reason for the termination of the trust?": detail_six
+    input type: area
+    maxlength: 352
+  - "Is the value of the trust cost it takes to administer it?": is_seven_yesno
+    datatype: yesno
+  - "is this trust charitable?": is_seven_charitable_yesno
+    datatype: yesno
+  - "Is this trust non-charitable?": is_seven_nonharitable_yesno
+    datatype: yesno
+  - "Please explain the cost required to maintain the trust?": detail_seven
+    input type: area
+    maxlength: 352
+---
+id: Trustee Information
+question: |
+  Trustee Information
+fields:
+  - "Trustees name first": trustees_name_first
+    maxlength: 39
+  - "Trustees name middle": trustees_name_middle
+    maxlength: 10
+  - "Trustees name last": trustees_name_last
+    maxlength: 38
+  - "Trustees address": trustees_address_address
+    maxlength: 58
+  - "Trustees address unit": trustees_address_unit
+    maxlength: 34
+  - "Trustees address city": trustees_address_city
+    maxlength: 22
+  - "Trustees address state": trustees_address_state
+    maxlength: 16
+  - "Trustees address zip": trustees_address_zip
+    maxlength: 26
+  - "Trustees phone numbner": trustees_phone_numbner
+    maxlength: 32
+---
+id: Interested Parties
+question: |
+  Interested Parties
+fields:
+  - "What is the first mentioned interested persons interest?": users1_interest
+    maxlength: 48
+  - "Is the first mentioned interested person a minor?": is_users1_minor_yesno
+    datatype: yesno
+  - "Is the first mentioned interested person incompetent?": is_users1_incompetent_yesno
+    datatype: yesno
+  - "What is the second mentioned interested person's interest?": users2_interest
+    maxlength: 48
+  - "Is the second mentioned interested person a minor?": is_users2_minor_yesno
+    datatype: yesno
+  - "Is the second mentioned interested person incompetent?": is_users2_incompetent_yesno
+    datatype: yesno
+  - "What is the third mentioned interested person's interest?": users3_interest
+    maxlength: 48
+  - "Is the third mentioned interested person a minor?": is_users3_minor_yesno
+    datatype: yesno
+  - "Is the third mentioned interested person incompetent?": is_users3_incompetent_yesno
+    datatype: yesno
+---
+id: Attorney Information
+question: |
+  Attorney Information
+fields:
+  - "Attorneys full name": attorneys_full_name
+    maxlength: 53
+  - "Attorneys unit": attorneys_unit
+    maxlength: 17
+  - "Attorneys state": attorneys_state
+    maxlength: 16
+  - "Attorneys zip": attorneys_zip
+    maxlength: 26
+  - "Attorneys bar number": attorneys_bar_number
+    maxlength: 46
+---
+id: Anything else to say
+question: |
+  Anything else to say
+fields:
+  - "Petitioners further statement": petitioners_further_statement
+    input type: area
+    maxlength: 546
+  - "Petitioners also requests": petitioners_also_requests
+    input type: area
+    maxlength: 658
+---
+id: Signature
+question: |
+  Signature
+fields:
+  - "Date of petitioners signature": petitioners_signature_date
+    datatype: date
+---
+id: preview trust_termination_form_named_12
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.   
+  
+  ${ al_court_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new tab. Click the "Edit answers" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_trust_termination_form_named_12'), label='Edit answers', color='info') }
+  
+  Remember to come back to this window to continue and sign your form.
+continue button field: trust_termination_form_named_12_preview_question    
+---
+code: |
+  signature_fields = ['petitioners[0].signature']
+---
+code: |
+  # This is a placeholder for the addresses that will be searched
+  # for matching address to court. Edit if court venue is based on 
+  # a different address than the user's
+  [user.address.address for user in users.complete_elements()]
+  addresses_to_search = [user.address for user in users.complete_elements()]
+---
+id: trust termination form named 12 review screen
+event: review_trust_termination_form_named_12
+question: |
+  Review your answers
+review:
+  - Edit: docket_number
+    button: |
+      **Docket number**:
+      ${ docket_number }
+  - Edit: trial_court
+    button: |
+      **Trial court**
+  
+      % if defined("trial_court.division"):
+      * division: ${ trial_court.division }
+      % endif
+  - Edit: case_name
+    button: |
+      **Case name**:
+      ${ case_name }
+  - Edit: petitioners.revisit
+    button: |
+      **Petitioners**
+
+      % for item in petitioners:
+        * ${ item }
+      % endfor
+  - Edit: petitioners_interest
+    button: |
+      **Petitioners interest**:
+      ${ petitioners_interest }
+  - Edit: trust_identity
+    button: |
+      **Trust identity**:
+      ${ trust_identity }
+  - Edit: trust_date
+    button: |
+      **Date of trust**:
+      ${ trust_date }
+  - Edit: amendments_date
+    button: |
+      **Date of amendments**:
+      ${ amendments_date }
+  - Edit: trail_court
+    button: |
+      **Trail court**:
+      ${ trail_court }
+  - Edit: is_petitioners_different_yesno
+    button: |
+      **Is the Petitioner not filing this form**:
+      ${ word(yesno(is_petitioners_different_yesno)) }
+  - Edit: is_petitioners_yesno
+    button: |
+      **Is Petitioner filing this form**:
+      ${ word(yesno(is_petitioners_yesno)) }
+  - Edit: trustees_name_middle
+    button: |
+      **Trustees name middle**:
+      ${ trustees_name_middle }
+  - Edit: trustees_name_last
+    button: |
+      **Trustees name last**:
+      ${ trustees_name_last }
+  - Edit: trustees_name_first
+    button: |
+      **Trustees name first**:
+      ${ trustees_name_first }
+  - Edit: trustees_address_city
+    button: |
+      **Trustees address city**:
+      ${ trustees_address_city }
+  - Edit: trustees_address_address
+    button: |
+      **Trustees address**:
+      ${ trustees_address_address }
+  - Edit: trustees_address_state
+    button: |
+      **Trustees address state**:
+      ${ trustees_address_state }
+  - Edit: trustees_address_zip
+    button: |
+      **Trustees address zip**:
+      ${ trustees_address_zip }
+  - Edit: trustees_address_unit
+    button: |
+      **Trustees address unit**:
+      ${ trustees_address_unit }
+  - Edit: trustees_phone_numbner
+    button: |
+      **Trustees phone numbner**:
+      ${ trustees_phone_numbner }
+  - Edit: is_users1_minor_yesno
+    button: |
+      **Is the first mentioned interested person a minor?**:
+      ${ word(yesno(is_users1_minor_yesno)) }
+  - Edit: is_users1_incompetent_yesno
+    button: |
+      **Is the first mentioned interested person incompetent?**:
+      ${ word(yesno(is_users1_incompetent_yesno)) }
+  - Edit: users.revisit
+    button: |
+      **Users**
+
+      % for item in users:
+        * ${ item }
+      % endfor
+  - Edit: users1_interest
+    button: |
+      **What is the first mentioned interested persons interest?**:
+      ${ users1_interest }
+  - Edit: is_users2_minor_yesno
+    button: |
+      **Is the second mentioned interested person a minor?**:
+      ${ word(yesno(is_users2_minor_yesno)) }
+  - Edit: is_users2_incompetent_yesno
+    button: |
+      **Is the second mentioned interested person incompetent?**:
+      ${ word(yesno(is_users2_incompetent_yesno)) }
+  - Edit: users2_interest
+    button: |
+      **What is the second mentioned interested person's interest?**:
+      ${ users2_interest }
+  - Edit: is_users3_minor_yesno
+    button: |
+      **Is the third mentioned interested person a minor?**:
+      ${ word(yesno(is_users3_minor_yesno)) }
+  - Edit: is_users3_incompetent_yesno
+    button: |
+      **Is the third mentioned interested person incompetent?**:
+      ${ word(yesno(is_users3_incompetent_yesno)) }
+  - Edit: users3_interest
+    button: |
+      **What is the third mentioned interested person's interest?**:
+      ${ users3_interest }
+  - Edit: is_five_yesno
+    button: |
+      **Is the trust a non-charitable irrevocable trust?**:
+      ${ word(yesno(is_five_yesno)) }
+  - Edit: is_five_one_yesno
+    button: |
+      **Do Settlor and all the Beneficiaries agree to the termination?**:
+      ${ word(yesno(is_five_one_yesno)) }
+  - Edit: is_five_two_yesno
+    button: |
+      **Are you sure that all Beneficiaries agree to the termination?**:
+      ${ word(yesno(is_five_two_yesno)) }
+  - Edit: is_five_three_yesno
+    button: |
+      **Are there any Benificiaries that do not approve of the termination?**:
+      ${ word(yesno(is_five_three_yesno)) }
+  - Edit: is_six_yesno
+    button: |
+      **Does this trust need to be terminated due to unanticipated events?**:
+      ${ word(yesno(is_six_yesno)) }
+  - Edit: is_six_charitable_yesno
+    button: |
+      **Is the trust charitable?**:
+      ${ word(yesno(is_six_charitable_yesno)) }
+  - Edit: is_six_noncharitable_yesno
+    button: |
+      **Is the trust non-charitable?**:
+      ${ word(yesno(is_six_noncharitable_yesno)) }
+  - Edit: detail_six
+    button: |
+      **Please explain the unanticipated reason for the termination of the trust?**:
+      > ${ single_paragraph(detail_six) }
+  - Edit: is_seven_yesno
+    button: |
+      **Is the value of the trust cost it takes to administer it?**:
+      ${ word(yesno(is_seven_yesno)) }
+  - Edit: is_seven_charitable_yesno
+    button: |
+      **is this trust charitable?**:
+      ${ word(yesno(is_seven_charitable_yesno)) }
+  - Edit: is_seven_nonharitable_yesno
+    button: |
+      **Is this trust non-charitable?**:
+      ${ word(yesno(is_seven_nonharitable_yesno)) }
+  - Edit: detail_seven
+    button: |
+      **Please explain the cost required to maintain the trust?**:
+      > ${ single_paragraph(detail_seven) }
+  - Edit: petitioners_further_statement
+    button: |
+      **Petitioners further statement**:
+      > ${ single_paragraph(petitioners_further_statement) }
+  - Edit: petitioners_also_requests
+    button: |
+      **Petitioners also requests**:
+      > ${ single_paragraph(petitioners_also_requests) }
+  - Edit: petitioners_signature_date
+    button: |
+      **Date of petitioners signature**:
+      ${ petitioners_signature_date }
+  - Edit: attorneys_full_name
+    button: |
+      **Attorneys full name**:
+      ${ attorneys_full_name }
+  - Edit: attorneys.revisit
+    button: |
+      **Attorneys**
+
+      % for item in attorneys:
+        * ${ item }
+      % endfor
+  - Edit: attorneys_unit
+    button: |
+      **Attorneys unit**:
+      ${ attorneys_unit }
+  - Edit: attorneys_state
+    button: |
+      **Attorneys state**:
+      ${ attorneys_state }
+  - Edit: attorneys_zip
+    button: |
+      **Attorneys zip**:
+      ${ attorneys_zip }
+  - Edit: attorneys_bar_number
+    button: |
+      **Attorneys bar number**:
+      ${ attorneys_bar_number }
+---
+continue button field: petitioners.revisit
+question: |
+  Edit petitioners
+subquestion: |
+  ${ petitioners.table }
+
+  ${ petitioners.add_action() }
+---
+table: petitioners.table
+rows: petitioners
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.unit") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Signature: |
+      row_item.signature if defined("row_item.signature") else ""
+edit:
+  - name.first
+  - address.unit
+  - phone_number
+  - signature
+confirm: True
+
+---
+continue button field: users.revisit
+question: |
+  Edit users
+subquestion: |
+  ${ users.table }
+
+  ${ users.add_action() }
+---
+table: users.table
+rows: users
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+edit:
+  - name.first
+  - address.address
+confirm: True
+
+---
+continue button field: attorneys.revisit
+question: |
+  Edit attorneys
+subquestion: |
+  ${ attorneys.table }
+
+  ${ attorneys.add_action() }
+---
+table: attorneys.table
+rows: attorneys
+columns:
+  - Address: |
+      row_item.address.block() if defined("row_item.address.city") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - address.city
+  - phone_number
+  - email
+confirm: True
+
+---
+id: download trust_termination_form_named_12
+event: trust_termination_form_named_12_download
+question: |
+  All done
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+
+  ${ action_button_html(url_action('review_trust_termination_form_named_12'), label='Edit answers', color='info') }
+  
+  
+  ${ al_user_bundle.download_list_html() }
+  
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
+
+progress: 100
+---
+# ALDocument objects specify the metadata for each template
+objects:
+  - trust_termination_form_named_12_Post_interview_instructions: ALDocument.using(title="Instructions", filename="trust_termination_form_named_12_next_steps.docx", enabled=True, has_addendum=False)
+  - trust_termination_form_named_12_attachment: ALDocument.using(title="Trust Termination", filename="trust_termination_form_named_12", enabled=True, has_addendum=False, )
+---
+# Bundles group the ALDocuments into separate downloads, such as for court and for the user
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[trust_termination_form_named_12_Post_interview_instructions, trust_termination_form_named_12_attachment], filename="trust_termination_form_named_12", title="All forms to download for your records", enabled=True)
+  - al_court_bundle: ALDocumentBundle.using(elements=[trust_termination_form_named_12_attachment],  filename="trust_termination_form_named_12", title="All forms to deliver to court", enabled=True)
+---
+# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
+# used for "preview" and "final" keys, and logic in the template checks the value of 
+# `i` to show or hide the user's signature
+attachment:
+  name: Post-interview-Instructions
+  filename: trust_termination_form_named_12_next_steps
+  docx template file: trust_termination_form_named_12_next_steps.docx
+  variable name: trust_termination_form_named_12_Post_interview_instructions[i]
+  skip undefined: True
+---
+attachment:
+  name: trust termination form named 12
+  filename: trust_termination_form_named_12
+  variable name: trust_termination_form_named_12_attachment[i]
+  skip undefined: True
+  pdf template file: trust_termination_form_named_12.pdf
+  fields:
+      - "docket_number": ${ docket_number }
+      - "trial_court_division": ${ trial_court.division }
+      - "case_name": ${ case_name }
+      - "petitioners_name_middle": ${ petitioners[0].name.middle }
+      - "petitioners_name_last": ${ petitioners[0].name.last }
+      - "petitioners_name_first": ${ petitioners[0].name.first }
+      - "petitioners_address_city": ${ petitioners[0].address.city }
+      - "petitioners_address_address": ${ petitioners[0].address.address }
+      - "petitioners_address_state": ${ petitioners[0].address.state }
+      - "petitioners_address_zip": ${ petitioners[0].address.zip }
+      - "petitioners_address_unit": ${ petitioners[0].address.unit }
+      - "petitioners_phone_number": ${ petitioners[0].phone_number }
+      - "petitioners_interest": ${ petitioners_interest }
+      - "trust_identity": ${ trust_identity }
+      - "trust_date": ${ trust_date.format() }
+      - "amendments_date": ${ amendments_date.format() }
+      - "trail_court": ${ trail_court }
+      - "is_petitioners_different_yesno": ${ is_petitioners_different_yesno }
+      - "is_petitioners_yesno": ${ is_petitioners_yesno }
+      - "trustees_name_middle": ${ trustees_name_middle }
+      - "trustees_name_last": ${ trustees_name_last }
+      - "trustees_name_first": ${ trustees_name_first }
+      - "trustees_address_city": ${ trustees_address_city }
+      - "trustees_address_address": ${ trustees_address_address }
+      - "trustees_address_state": ${ trustees_address_state }
+      - "trustees_address_zip": ${ trustees_address_zip }
+      - "trustees_address_unit": ${ trustees_address_unit }
+      - "trustees_phone_numbner": ${ trustees_phone_numbner }
+      - "is_users1_minor_yesno": ${ is_users1_minor_yesno }
+      - "is_users1_incompetent_yesno": ${ is_users1_incompetent_yesno }
+      - "users1_name": ${ users[0] }
+      - "users1_address_on_one_line": ${ users[0].address.on_one_line() }
+      - "users1_interest": ${ users1_interest }
+      - "is_users2_minor_yesno": ${ is_users2_minor_yesno }
+      - "is_users2_incompetent_yesno": ${ is_users2_incompetent_yesno }
+      - "users2_name": ${ users[1] }
+      - "users2_address_on_one_line": ${ users[1].address.on_one_line() }
+      - "users2_interest": ${ users2_interest }
+      - "is_users3_minor_yesno": ${ is_users3_minor_yesno }
+      - "is_users3_incompetent_yesno": ${ is_users3_incompetent_yesno }
+      - "users3_name": ${ users[2] }
+      - "users3_address_on_one_line": ${ users[2].address.on_one_line() }
+      - "users3_interest": ${ users3_interest }
+      - "is_five_yesno": ${ is_five_yesno }
+      - "is_five_one_yesno": ${ is_five_one_yesno }
+      - "is_five_two_yesno": ${ is_five_two_yesno }
+      - "is_five_three_yesno": ${ is_five_three_yesno }
+      - "is_six_yesno": ${ is_six_yesno }
+      - "is_six_charitable_yesno": ${ is_six_charitable_yesno }
+      - "is_six_noncharitable_yesno": ${ is_six_noncharitable_yesno }
+      - "detail_six": ${ detail_six }
+      - "is_seven_yesno": ${ is_seven_yesno }
+      - "is_seven_charitable_yesno": ${ is_seven_charitable_yesno }
+      - "is_seven_nonharitable_yesno": ${ is_seven_nonharitable_yesno }
+      - "detail_seven": ${ detail_seven }
+      - "petitioners_further_statement": ${ petitioners_further_statement }
+      - "petitioners_also_requests": ${ petitioners_also_requests }
+      - "petitioners_signature": ${ petitioners[0].signature_if_final(i) }
+      - "petitioners_signature_date": ${ petitioners_signature_date.format() }
+      - "attorneys_full_name": ${ attorneys_full_name }
+      - "attorneys_address_address": ${ attorneys[0].address.address }
+      - "attorneys_unit": ${ attorneys_unit }
+      - "attorneys_address_city": ${ attorneys[0].address.city }
+      - "attorneys_state": ${ attorneys_state }
+      - "attorneys_zip": ${ attorneys_zip }
+      - "attorneys_phone_number": ${ attorneys[0].phone_number }
+      - "attorneys_bar_number": ${ attorneys_bar_number }
+      - "attorneys_email": ${ attorneys[0].email }
+
+
