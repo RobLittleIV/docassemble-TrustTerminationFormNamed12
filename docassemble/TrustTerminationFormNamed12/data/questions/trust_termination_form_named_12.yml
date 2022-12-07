@@ -55,7 +55,13 @@ code: |
   al_form_type = "other" 
 ---
 objects:
-  - users: ALPeopleList.using(there_are_any=True)
+  - users: ALPeopleList.using(there_are_any=True, complete_attribute="complete")
+  # - attorneys: ALPeopleList.using(there_are_any=True, target_number=1)
+---
+code: |
+  users[i].name.first
+  users[i].address.address
+  users[i].complete = True
 ---
 sections:
   - review_trust_termination_form_named_12: Review your answers
@@ -88,9 +94,6 @@ code: |
   users.gather()
   set_parts(subtitle=str(users))
   set_progress(48)
-  users[0].address.address
-  users[1].address.address
-  users[2].address.address
   set_progress(60)
   attorneys_full_name
   attorneys[0].address.address
