@@ -230,23 +230,23 @@ comment: |
   question: |
     Interested Parties
   fields:
-    - "What is the first mentioned interested persons interest?": users1_interest
+    - "What is the first mentioned interested persons interest?": users[i].interest
       maxlength: 48
-    - "Is the first mentioned interested person a minor?": is_users1_minor_yesno
+    - "Is the first mentioned interested person a minor?": users[i].is_minor
       datatype: yesno
-    - "Is the first mentioned interested person incompetent?": is_users1_incompetent_yesno
+    - "Is the first mentioned interested person incompetent?": users[i].is_incompetent
       datatype: yesno
-    - "What is the second mentioned interested person's interest?": users2_interest
+    - "What is the second mentioned interested person's interest?": users[i].interest
       maxlength: 48
-    - "Is the second mentioned interested person a minor?": is_users2_minor_yesno
+    - "Is the second mentioned interested person a minor?": users[i].is_minor
       datatype: yesno
-    - "Is the second mentioned interested person incompetent?": is_users2_incompetent_yesno
+    - "Is the second mentioned interested person incompetent?": users[i].is_incompetent
       datatype: yesno
-    - "What is the third mentioned interested person's interest?": users3_interest
+    - "What is the third mentioned interested person's interest?": users[i].interest
       maxlength: 48
-    - "Is the third mentioned interested person a minor?": is_users3_minor_yesno
+    - "Is the third mentioned interested person a minor?": users[i].is_minor
       datatype: yesno
-    - "Is the third mentioned interested person incompetent?": is_users3_incompetent_yesno
+    - "Is the third mentioned interested person incompetent?": users[i].is_incompetent
       datatype: yesno
 ---
 id: users_interest
@@ -405,14 +405,14 @@ review:
     button: |
       **Trustees phone numbner**:
       ${ trustees_phone_numbner }
-  - Edit: is_users1_minor_yesno
+  - Edit: users[i].is_minor
     button: |
       **Is the first mentioned interested person a minor?**:
-      ${ word(yesno(is_users1_minor_yesno)) }
-  - Edit: is_users1_incompetent_yesno
+      ${ word(yesno(users[i].is_minor)) }
+  - Edit: users[i].is_incompetent
     button: |
       **Is the first mentioned interested person incompetent?**:
-      ${ word(yesno(is_users1_incompetent_yesno)) }
+      ${ word(yesno(users[i].is_incompetent)) }
   - Edit: users.revisit
     button: |
       **Users**
@@ -420,34 +420,34 @@ review:
       % for item in users:
         * ${ item }
       % endfor
-  - Edit: users1_interest
+  - Edit: users[i].interest
     button: |
       **What is the first mentioned interested persons interest?**:
-      ${ users1_interest }
-  - Edit: is_users2_minor_yesno
+      ${ users[i].interest }
+  - Edit: users[i].is_minor
     button: |
       **Is the second mentioned interested person a minor?**:
-      ${ word(yesno(is_users2_minor_yesno)) }
-  - Edit: is_users2_incompetent_yesno
+      ${ word(yesno(users[i].is_minor)) }
+  - Edit: users[i].is_incompetent
     button: |
       **Is the second mentioned interested person incompetent?**:
-      ${ word(yesno(is_users2_incompetent_yesno)) }
-  - Edit: users2_interest
+      ${ word(yesno(users[i].is_incompetent)) }
+  - Edit: users[i].interest
     button: |
       **What is the second mentioned interested person's interest?**:
-      ${ users2_interest }
-  - Edit: is_users3_minor_yesno
+      ${ users[i].interest }
+  - Edit: users[i].is_minor
     button: |
       **Is the third mentioned interested person a minor?**:
-      ${ word(yesno(is_users3_minor_yesno)) }
-  - Edit: is_users3_incompetent_yesno
+      ${ word(yesno(users[i].is_minor)) }
+  - Edit: users[i].is_incompetent
     button: |
       **Is the third mentioned interested person incompetent?**:
-      ${ word(yesno(is_users3_incompetent_yesno)) }
-  - Edit: users3_interest
+      ${ word(yesno(users[i].is_incompetent)) }
+  - Edit: users[i].interest
     button: |
       **What is the third mentioned interested person's interest?**:
-      ${ users3_interest }
+      ${ users[i].interest }
   - Edit: is_five_yesno
     button: |
       **Is the trust a non-charitable irrevocable trust?**:
@@ -683,17 +683,17 @@ attachment:
       - "trustees_address_unit": ${ trustees_address_unit }
       - "trustees_phone_numbner": ${ trustees_phone_numbner }
       - "is_users1_minor_yesno": ${ users[0].is_minor }
-      - "is_users1_incompetent_yesno": ${ users[0].incompetent }
+      - "is_users1_incompetent_yesno": ${ users[0].is_incompetent }
       - "users1_name": ${ users[0] }
       - "users1_address_on_one_line": ${ users[0].address.on_one_line() }
       - "users1_interest": ${ users[0].interest }
-      - "is_users2_minor_yesno": ${ is_users2_minor_yesno }
-      - "is_users2_incompetent_yesno": ${ is_users2_incompetent_yesno }
+      - "is_users2_minor_yesno": ${ users[i].is_minor }
+      - "is_users2_incompetent_yesno": ${ users[i].is_incompetent }
       - "users2_name": ${ users[1] }
       - "users2_address_on_one_line": ${ users[1].address.on_one_line() }
       - "users2_interest": ${ users[1].interest }
-      - "is_users3_minor_yesno": ${ is_users3_minor_yesno }
-      - "is_users3_incompetent_yesno": ${ is_users3_incompetent_yesno }
+      - "is_users3_minor_yesno": ${ users[i].is_minor }
+      - "is_users3_incompetent_yesno": ${ users[i].is_incompetent }
       - "users3_name": ${ users[2] }
       - "users3_address_on_one_line": ${ users[2].address.on_one_line() }
       - "users3_interest": ${ users[2].interest }
