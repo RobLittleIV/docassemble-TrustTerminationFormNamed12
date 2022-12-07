@@ -56,7 +56,7 @@ code: |
 ---
 objects:
   - users: ALPeopleList.using(there_are_any=True, complete_attribute="complete")
-  # - attorneys: ALPeopleList.using(there_are_any=True, target_number=1)
+  - attorneys: ALPeopleList.using(there_are_any=True, ask_number=True,target_number=1)
 ---
 code: |
   users[i].name.first
@@ -95,10 +95,11 @@ code: |
   set_parts(subtitle=str(users))
   set_progress(48)
   set_progress(60)
-  attorneys_full_name
+  attorneys.gather()
   attorneys[0].address.address
   attorneys[0].phone_number
   attorneys[0].email
+  attorneys[0].bbo 
   interview_order_trust_termination_form_named_12 = True
 ---
 ###################### Main order ######################
@@ -237,15 +238,15 @@ id: Attorney Information
 question: |
   Attorney Information
 fields:
-  - "Attorneys full name": attorneys_full_name
+  - "Attorneys full name": attorneys[0].name.first
     maxlength: 53
-  - "Attorneys unit": attorneys_unit
+  - "Attorneys unit": attorneys[0].address.unit
     maxlength: 17
-  - "Attorneys state": attorneys_state
+  - "Attorneys state": attorneys[0].address.state
     maxlength: 16
-  - "Attorneys zip": attorneys_zip
+  - "Attorneys zip": attorneys[0].address.zip
     maxlength: 26
-  - "Attorneys bar number": attorneys_bar_number
+  - "Attorneys bar number": attorneys[0].bbo
     maxlength: 46
 ---
 id: Anything else to say
@@ -486,10 +487,10 @@ review:
     button: |
       **Date of petitioners signature**:
       ${ petitioners_signature_date }
-  - Edit: attorneys_full_name
+  - Edit: attorneys[0].name.first
     button: |
       **Attorneys full name**:
-      ${ attorneys_full_name }
+      ${ attorneys[0].name.full() }
   - Edit: attorneys.revisit
     button: |
       **Attorneys**
@@ -497,22 +498,22 @@ review:
       % for item in attorneys:
         * ${ item }
       % endfor
-  - Edit: attorneys_unit
+  - Edit: attorneys[0].address.unit
     button: |
       **Attorneys unit**:
-      ${ attorneys_unit }
-  - Edit: attorneys_state
+      ${ attorneys[0].address.unit }
+  - Edit: attorneys[0].address.state
     button: |
       **Attorneys state**:
-      ${ attorneys_state }
-  - Edit: attorneys_zip
+      ${ attorneys[0].address.state }
+  - Edit: attorneys[0].address.zip
     button: |
       **Attorneys zip**:
-      ${ attorneys_zip }
-  - Edit: attorneys_bar_number
+      ${ attorneys[0].address.zip }
+  - Edit: attorneys[0].bbo
     button: |
       **Attorneys bar number**:
-      ${ attorneys_bar_number }
+      ${ attorneys[0].bbo }
 ---
 continue button field: petitioners.revisit
 question: |
@@ -691,14 +692,14 @@ attachment:
       - "petitioners_also_requests": ${ petitioners_also_requests }
       - "petitioners_signature": ${ petitioners[0].signature_if_final(i) }
       - "petitioners_signature_date": ${ petitioners_signature_date.format() }
-      - "attorneys_full_name": ${ attorneys_full_name }
+      - "attorneys_full_name": ${ attorneys[0].name.full() }
       - "attorneys_address_address": ${ attorneys[0].address.address }
-      - "attorneys_unit": ${ attorneys_unit }
+      - "attorneys_unit": ${ attorneys[0].address.unit }
       - "attorneys_address_city": ${ attorneys[0].address.city }
-      - "attorneys_state": ${ attorneys_state }
-      - "attorneys_zip": ${ attorneys_zip }
+      - "attorneys_state": ${ attorneys[0].address.state }
+      - "attorneys_zip": ${ attorneys[0].address.zip }
       - "attorneys_phone_number": ${ attorneys[0].phone_number }
-      - "attorneys_bar_number": ${ attorneys_bar_number }
+      - "attorneys_bar_number": ${ attorneys[0].bbo }
       - "attorneys_email": ${ attorneys[0].email }
 
 
