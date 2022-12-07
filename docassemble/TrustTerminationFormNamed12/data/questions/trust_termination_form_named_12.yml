@@ -61,6 +61,9 @@ objects:
 code: |
   users[i].name.first
   users[i].address.address
+  users[i].interest
+  users[i].is_minor
+  users[i].is_incompetent
   users[i].complete = True
 ---
 sections:
@@ -82,7 +85,7 @@ code: |
   is_petitioners_yesno
   trust_date
   trustees_name_first
-  users1_interest
+  #users1_interest
   set_progress(12)
   petitioners_further_statement
   petitioners_signature_date
@@ -95,7 +98,6 @@ code: |
   set_parts(subtitle=str(users))
   set_progress(48)
   set_progress(60)
-  attorneys.gather()
   attorneys[0].address.address
   attorneys[0].phone_number
   attorneys[0].email
@@ -211,28 +213,47 @@ fields:
   - "Trustees phone numbner": trustees_phone_numbner
     maxlength: 32
 ---
-id: Interested Parties
-question: |
-  Interested Parties
-fields:
-  - "What is the first mentioned interested persons interest?": users1_interest
+id: users_minor
+question: Is ${ users[i] } a minor?
+fields: 
+  - Is ${ users[i] } a minor?: users[i].is_minor
+    datatype: yesno
+---
+id: users_incompetent
+question: Is ${ users[i] } incompetent?
+fields: 
+  - Is ${ users[i] } incompetent?: users[i].is_incompetent
+    datatype: yesno
+---
+comment: | 
+  id: Interested Parties
+  question: |
+    Interested Parties
+  fields:
+    - "What is the first mentioned interested persons interest?": users1_interest
+      maxlength: 48
+    - "Is the first mentioned interested person a minor?": is_users1_minor_yesno
+      datatype: yesno
+    - "Is the first mentioned interested person incompetent?": is_users1_incompetent_yesno
+      datatype: yesno
+    - "What is the second mentioned interested person's interest?": users2_interest
+      maxlength: 48
+    - "Is the second mentioned interested person a minor?": is_users2_minor_yesno
+      datatype: yesno
+    - "Is the second mentioned interested person incompetent?": is_users2_incompetent_yesno
+      datatype: yesno
+    - "What is the third mentioned interested person's interest?": users3_interest
+      maxlength: 48
+    - "Is the third mentioned interested person a minor?": is_users3_minor_yesno
+      datatype: yesno
+    - "Is the third mentioned interested person incompetent?": is_users3_incompetent_yesno
+      datatype: yesno
+---
+id: users_interest
+question: what is the interest of ${ users[i] } 
+fields: 
+  - what is ${ users[i] } interest?: users[i].interest
     maxlength: 48
-  - "Is the first mentioned interested person a minor?": is_users1_minor_yesno
-    datatype: yesno
-  - "Is the first mentioned interested person incompetent?": is_users1_incompetent_yesno
-    datatype: yesno
-  - "What is the second mentioned interested person's interest?": users2_interest
-    maxlength: 48
-  - "Is the second mentioned interested person a minor?": is_users2_minor_yesno
-    datatype: yesno
-  - "Is the second mentioned interested person incompetent?": is_users2_incompetent_yesno
-    datatype: yesno
-  - "What is the third mentioned interested person's interest?": users3_interest
-    maxlength: 48
-  - "Is the third mentioned interested person a minor?": is_users3_minor_yesno
-    datatype: yesno
-  - "Is the third mentioned interested person incompetent?": is_users3_incompetent_yesno
-    datatype: yesno
 ---
 id: Attorney Information
 question: |
@@ -661,21 +682,21 @@ attachment:
       - "trustees_address_zip": ${ trustees_address_zip }
       - "trustees_address_unit": ${ trustees_address_unit }
       - "trustees_phone_numbner": ${ trustees_phone_numbner }
-      - "is_users1_minor_yesno": ${ is_users1_minor_yesno }
-      - "is_users1_incompetent_yesno": ${ is_users1_incompetent_yesno }
+      - "is_users1_minor_yesno": ${ users[0].is_minor }
+      - "is_users1_incompetent_yesno": ${ users[0].incompetent }
       - "users1_name": ${ users[0] }
       - "users1_address_on_one_line": ${ users[0].address.on_one_line() }
-      - "users1_interest": ${ users1_interest }
+      - "users1_interest": ${ users[0].interest }
       - "is_users2_minor_yesno": ${ is_users2_minor_yesno }
       - "is_users2_incompetent_yesno": ${ is_users2_incompetent_yesno }
       - "users2_name": ${ users[1] }
       - "users2_address_on_one_line": ${ users[1].address.on_one_line() }
-      - "users2_interest": ${ users2_interest }
+      - "users2_interest": ${ users[1].interest }
       - "is_users3_minor_yesno": ${ is_users3_minor_yesno }
       - "is_users3_incompetent_yesno": ${ is_users3_incompetent_yesno }
       - "users3_name": ${ users[2] }
       - "users3_address_on_one_line": ${ users[2].address.on_one_line() }
-      - "users3_interest": ${ users3_interest }
+      - "users3_interest": ${ users[2].interest }
       - "is_five_yesno": ${ is_five_yesno }
       - "is_five_one_yesno": ${ is_five_one_yesno }
       - "is_five_two_yesno": ${ is_five_two_yesno }
