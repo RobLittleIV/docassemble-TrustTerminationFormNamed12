@@ -261,20 +261,20 @@ fields:
   - what is ${ users[i] } interest?: users[i].interest
     maxlength: 48
 ---
-id: Attorney Information
-question: |
-  Attorney Information
-fields:
-  - "Attorneys full name": attorneys[0].name.first
-    maxlength: 53
-  - "Attorneys unit": attorneys[0].address.unit
-    maxlength: 17
-  - "Attorneys state": attorneys[0].address.state
-    maxlength: 16
-  - "Attorneys zip": attorneys[0].address.zip
-    maxlength: 26
-  - "Attorneys bar number": attorneys[0].bbo
-    maxlength: 46
+#id: Attorney Information
+#question: |
+#  Attorney Information
+#fields:
+#  - "Attorneys full name": attorneys[0].name.first
+#    maxlength: 53
+#  - "Attorneys unit": attorneys[0].address.unit
+#    maxlength: 17
+#  - "Attorneys state": attorneys[0].address.state
+#    maxlength: 16
+#  - "Attorneys zip": attorneys[0].address.zip
+#    maxlength: 26
+#  - "Attorneys bar number": attorneys[0].bbo
+#    maxlength: 46
 ---
 id: Anything else to say
 question: |
@@ -691,15 +691,15 @@ attachment:
       - "trail_court": ${ trail_court }
       - "is_petitioners_different_yesno": ${ is_petitioners_different_yesno }
       - "is_petitioners_yesno": ${ is_petitioners_yesno }
-      - "trustees_name_middle": ${ trustees_name_middle }
-      - "trustees_name_last": ${ trustees_name_last }
-      - "trustees_name_first": ${ trustees_name_first }
-      - "trustees_address_city": ${ trustees_address_city }
-      - "trustees_address_address": ${ trustees_address_address }
-      - "trustees_address_state": ${ trustees_address_state }
-      - "trustees_address_zip": ${ trustees_address_zip }
-      - "trustees_address_unit": ${ trustees_address_unit }
-      - "trustees_phone_numbner": ${ trustees_phone_numbner }
+      - "trustees_name_middle": ${ trustees[0].name.middle }
+      - "trustees_name_last": ${ trustees[0].name.last }
+      - "trustees_name_first": ${ trustees[0].name.first }
+      - "trustees_address_city": ${ trustees[0].address.city }
+      - "trustees_address_address": ${ trustees[0].address.address }
+      - "trustees_address_state": ${ trustees[0].address.state }
+      - "trustees_address_zip": ${ trustees[0].address.zip }
+      - "trustees_address_unit": ${ trustees[0].address.unit }
+      - "trustees_phone_numbner": ${ trustees[0].phone_number }
       - "is_users1_minor_yesno": ${ users[0].is_minor }
       - "is_users1_incompetent_yesno": ${ users[0].is_incompetent }
       - "users1_name": ${ users[0] }
