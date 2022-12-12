@@ -57,6 +57,7 @@ code: |
 objects:
   - users: ALPeopleList.using(there_are_any=True, complete_attribute="complete")
   - attorneys: ALPeopleList.using(there_are_any=True, ask_number=True,target_number=1)
+  - trustees: ALPeopleList.using(there_are_any=True, ask_number=True,target_number=1) 
 ---
 code: |
   users[i].name.first
@@ -84,7 +85,11 @@ code: |
   trial_court.division
   is_petitioners_yesno
   trust_date
-  trustees_name_first
+  trustees.gather()
+  trustees[0].address.address
+  trustees[0].phone_number
+  trustees[0].email
+  #trustees_name_first
   #users1_interest
   set_progress(12)
   petitioners_further_statement
@@ -98,6 +103,7 @@ code: |
   set_parts(subtitle=str(users))
   set_progress(48)
   set_progress(60)
+  attorneys.gather()
   attorneys[0].address.address
   attorneys[0].phone_number
   attorneys[0].email
@@ -139,7 +145,7 @@ question: |
 fields:
   - "Case name": case_name
     maxlength: 56
-  - "Trail court": trail_court
+  - "Trial court": trail_court
     maxlength: 91
 ---
 id: Petitioner Information
@@ -230,23 +236,23 @@ comment: |
   question: |
     Interested Parties
   fields:
-    - "What is the first mentioned interested persons interest?": users[i].interest
+    - "What is the first mentioned interested persons interest?": users[0].interest
       maxlength: 48
-    - "Is the first mentioned interested person a minor?": users[i].is_minor
+    - "Is the first mentioned interested person a minor?": users[0].is_minor
       datatype: yesno
-    - "Is the first mentioned interested person incompetent?": users[i].is_incompetent
+    - "Is the first mentioned interested person incompetent?": users[0].is_incompetent
       datatype: yesno
-    - "What is the second mentioned interested person's interest?": users[i].interest
+    - "What is the second mentioned interested person's interest?": users[1].interest
       maxlength: 48
-    - "Is the second mentioned interested person a minor?": users[i].is_minor
+    - "Is the second mentioned interested person a minor?": users[1].is_minor
       datatype: yesno
-    - "Is the second mentioned interested person incompetent?": users[i].is_incompetent
+    - "Is the second mentioned interested person incompetent?": users[1].is_incompetent
       datatype: yesno
-    - "What is the third mentioned interested person's interest?": users[i].interest
+    - "What is the third mentioned interested person's interest?": users[2].interest
       maxlength: 48
-    - "Is the third mentioned interested person a minor?": users[i].is_minor
+    - "Is the third mentioned interested person a minor?": users[2].is_minor
       datatype: yesno
-    - "Is the third mentioned interested person incompetent?": users[i].is_incompetent
+    - "Is the third mentioned interested person incompetent?": users[2].is_incompetent
       datatype: yesno
 ---
 id: users_interest
@@ -306,6 +312,18 @@ continue button field: trust_termination_form_named_12_preview_question
 ---
 code: |
   signature_fields = ['petitioners[0].signature']
+---
+id: your name
+sets:
+    - users[0].name.first
+    - users[0].name.last
+    - users[0].name.middle
+    - users[0].name.suffix
+question:  |
+  Who is an Interested Party?
+fields:
+  - code: |
+      users[0].name_fields()
 ---
 code: |
   # This is a placeholder for the addresses that will be searched
@@ -405,14 +423,14 @@ review:
     button: |
       **Trustees phone numbner**:
       ${ trustees_phone_numbner }
-  - Edit: users[i].is_minor
+  - Edit: users[0].is_minor
     button: |
       **Is the first mentioned interested person a minor?**:
-      ${ word(yesno(users[i].is_minor)) }
-  - Edit: users[i].is_incompetent
+      ${ word(yesno(users[0].is_minor)) }
+  - Edit: users[0].is_incompetent
     button: |
       **Is the first mentioned interested person incompetent?**:
-      ${ word(yesno(users[i].is_incompetent)) }
+      ${ word(yesno(users[0].is_incompetent)) }
   - Edit: users.revisit
     button: |
       **Users**
@@ -420,34 +438,34 @@ review:
       % for item in users:
         * ${ item }
       % endfor
-  - Edit: users[i].interest
+  - Edit: users[0].interest
     button: |
       **What is the first mentioned interested persons interest?**:
       ${ users[i].interest }
-  - Edit: users[i].is_minor
+  - Edit: users[1].is_minor
     button: |
       **Is the second mentioned interested person a minor?**:
-      ${ word(yesno(users[i].is_minor)) }
-  - Edit: users[i].is_incompetent
+      ${ word(yesno(users[1].is_minor)) }
+  - Edit: users[1].is_incompetent
     button: |
       **Is the second mentioned interested person incompetent?**:
-      ${ word(yesno(users[i].is_incompetent)) }
-  - Edit: users[i].interest
+      ${ word(yesno(users[1].is_incompetent)) }
+  - Edit: users[1].interest
     button: |
       **What is the second mentioned interested person's interest?**:
-      ${ users[i].interest }
-  - Edit: users[i].is_minor
+      ${ users[1].interest }
+  - Edit: users[2].is_minor
     button: |
       **Is the third mentioned interested person a minor?**:
-      ${ word(yesno(users[i].is_minor)) }
-  - Edit: users[i].is_incompetent
+      ${ word(yesno(users[2].is_minor)) }
+  - Edit: users[2].is_incompetent
     button: |
       **Is the third mentioned interested person incompetent?**:
-      ${ word(yesno(users[i].is_incompetent)) }
-  - Edit: users[i].interest
+      ${ word(yesno(users[2].is_incompetent)) }
+  - Edit: users[2].interest
     button: |
       **What is the third mentioned interested person's interest?**:
-      ${ users[i].interest }
+      ${ users[2].interest }
   - Edit: is_five_yesno
     button: |
       **Is the trust a non-charitable irrevocable trust?**:
@@ -687,13 +705,13 @@ attachment:
       - "users1_name": ${ users[0] }
       - "users1_address_on_one_line": ${ users[0].address.on_one_line() }
       - "users1_interest": ${ users[0].interest }
-      - "is_users2_minor_yesno": ${ users[i].is_minor }
-      - "is_users2_incompetent_yesno": ${ users[i].is_incompetent }
+      - "is_users2_minor_yesno": ${ users[1].is_minor }
+      - "is_users2_incompetent_yesno": ${ users[1].is_incompetent }
       - "users2_name": ${ users[1] }
       - "users2_address_on_one_line": ${ users[1].address.on_one_line() }
       - "users2_interest": ${ users[1].interest }
-      - "is_users3_minor_yesno": ${ users[i].is_minor }
-      - "is_users3_incompetent_yesno": ${ users[i].is_incompetent }
+      - "is_users3_minor_yesno": ${ users[2].is_minor }
+      - "is_users3_incompetent_yesno": ${ users[2].is_incompetent }
       - "users3_name": ${ users[2] }
       - "users3_address_on_one_line": ${ users[2].address.on_one_line() }
       - "users3_interest": ${ users[2].interest }
@@ -722,5 +740,4 @@ attachment:
       - "attorneys_phone_number": ${ attorneys[0].phone_number }
       - "attorneys_bar_number": ${ attorneys[0].bbo }
       - "attorneys_email": ${ attorneys[0].email }
-
 
